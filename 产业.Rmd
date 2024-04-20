@@ -1,0 +1,49 @@
+---
+title: "新产业分析"
+author: "Han Li"
+date: "2024-04-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r }
+library(FactoMineR) # for CA and MCA
+library(factoextra)
+```
+
+## Including Plots
+
+读取表格
+
+```{r }
+data=read.csv('newenergynew.csv')
+```
+
+清洗数据
+```{r}
+rownames(data)=data$X
+data[is.na(data)]<-0
+data<-data[,-which(names(data) == "X")]
+```
+可视化，红色为产业，蓝色为城市，他们在二维前两个主成分的投射
+```{r}
+ca<- CA(data)
+fviz_ca_biplot(ca, repel = TRUE)
+```
+城市对前两个主元素的贡献（前两列）：
+```{r CA object rows}
+ca$row
+```
+产业对前两个主元素的贡献
+```{r CA table}
+knitr::kable(round(ca$col$contrib,2), caption = "Column contributions")
+```
